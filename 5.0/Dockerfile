@@ -26,14 +26,14 @@ RUN set -x \
 RUN apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys 46095ACC8548582C1A2699A9D27D666CD88E42B4
 
 ENV LOGSTASH_MAJOR 5.0
-ENV LOGSTASH_VERSION 1:5.0.0~alpha5-1
+ENV LOGSTASH_VERSION 5.0.0-rc1
 
-RUN echo "deb http://packages.elastic.co/logstash/${LOGSTASH_MAJOR}/debian stable main" > /etc/apt/sources.list.d/logstash.list
+#RUN echo "deb http://packages.elastic.co/logstash/${LOGSTASH_MAJOR}/debian stable main" > /etc/apt/sources.list.d/logstash.list
 
 RUN set -x \
-	&& apt-get update \
-	&& apt-get install -y --no-install-recommends logstash=$LOGSTASH_VERSION \
-	&& rm -rf /var/lib/apt/lists/*
+	&& wget -nv -O logstash.deb "https://artifacts.elastic.co/downloads/logstash/logstash-${LOGSTASH_VERSION}.deb" \
+	&& dpkg -i logstash.deb \
+	&& rm logstash.deb
 
 ENV PATH /usr/share/logstash/bin:$PATH
 
